@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    
+    {% if page.intro %}
+        <div class="intro">{{ page.intro|richtext }}</div>
+    {% endif %}
+    
+    <div class="blog-posts">
+        {% for post in blog_entries %}
+            <article class="blog-post">
+                <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                <p class="meta">{{ post.date }}</p>
+                <p>{{ post.intro }}</p>
+            </article>
+        {% empty %}
+            <p>No blog posts yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

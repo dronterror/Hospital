@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    
+    {% if page.intro %}
+        <div class="intro">{{ page.intro|richtext }}</div>
+    {% endif %}
+    
+    {% for doctor in doctors %}
+        <div class="doctor-card">
+            <h3>{{ doctor.name }}</h3>
+            <p>Specialization: {{ doctor.specialization }}</p>
+            {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}" class="doctor-photo">
+            {% endif %}
+            {% if doctor.bio %}
+                <p>{{ doctor.bio }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -9,43 +9,82 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=hospital_website.settings
+      - POSTGRES_DB=hospital_db
+      - POSTGRES_USER=hospital_user
+      - POSTGRES_PASSWORD=secretpassword
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./backend:/app
     expose:
       - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`localhost`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
     networks:
       - mynetwork
 
-  nginx1:
-    image: my-nginx-image:latest
-    volumes:
-      - ./nginx/default1.conf:/etc/nginx/conf.d/default.conf
-      - ./backend/staticfiles:/app/staticfiles
+  celery_worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: celery -A hospital_website worker -l info
     depends_on:
+      - db
+      - redis
       - backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=hospital_website.settings
+      - POSTGRES_DB=hospital_db
+      - POSTGRES_USER=hospital_user
+      - POSTGRES_PASSWORD=secretpassword
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./backend:/app
+    networks:
+      - mynetwork
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=hospital_db
+      - POSTGRES_USER=hospital_user
+      - POSTGRES_PASSWORD=secretpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     ports:
-      - "8080:80"
+      - "5432:5432"
     networks:
       - mynetwork
 
-  nginx2:
-    image: my-nginx-image:latest
-    volumes:
-      - ./nginx/default1.conf:/etc/nginx/conf.d/default.conf
-      - ./backend/staticfiles:/app/staticfiles
-    depends_on:
-      - backend
-    expose:
-      - "80"
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
     networks:
       - mynetwork
 
-  haproxy:
-    image: haproxy:latest
-    volumes:
-      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+  traefik:
+    image: traefik:v2.9
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
-    depends_on:
-      - nginx1
-      - nginx2
+      - "8080:8080" # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - mynetwork
+
+volumes:
+  postgres_data:

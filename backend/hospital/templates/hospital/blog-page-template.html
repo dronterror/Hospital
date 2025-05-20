@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <article class="blog-post">
+        <h1>{{ page.title }}</h1>
+        <p class="meta">{{ page.date }}</p>
+        
+        {% if page.intro %}
+            <div class="intro">
+                <p>{{ page.intro }}</p>
+            </div>
+        {% endif %}
+        
+        {{ page.body|richtext }}
+        
+        <p><a href="{{ page.get_parent.url }}">← Back to blog</a></p>
+    </article>
+{% endblock %}

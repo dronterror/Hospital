@@ -1,6 +1,0 @@
-<h2>Блог</h2>
-{% for post in posts %}
-  <h3><a href="{% url 'blog-detail' post.id %}">{{ post.title }}</a></h3>
-  <p>{{ post.published }}</p>
-{% endfor %}
-

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    
+    {% if page.intro %}
+        <div class="intro">{{ page.intro|richtext }}</div>
+    {% endif %}
+    
+    <div class="feature-blocks">
+        <div class="feature">
+            <h2>Book an Appointment</h2>
+            <p>Schedule your visit with one of our specialists.</p>
+            <a href="{% url 'appointment' %}" class="button">Book Now</a>
+        </div>
+        
+        <div class="feature">
+            <h2>Meet Our Doctors</h2>
+            <p>Learn about our experienced medical professionals.</p>
+            <a href="{% pageurl page.get_children.type(DoctorIndexPage).first %}" class="button">View Doctors</a>
+        </div>
+        
+        <div class="feature">
+            <h2>Health Blog</h2>
+            <p>Read the latest articles about health and wellness.</p>
+            <a href="{% pageurl page.get_children.type(BlogIndexPage).first %}" class="button">Read Blog</a>
+        </div>
+    </div>
+{% endblock %}

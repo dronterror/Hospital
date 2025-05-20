@@ -3,3 +3,9 @@ gunicorn
 psycopg2-binary
 django-redis
 uvicorn[standard]
+wagtail>=5.0
+celery>=5.2
+redis>=4.3
+django-celery-results
+django-celery-beat
+Pillow
