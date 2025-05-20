@@ -9,3 +9,4 @@ redis>=4.3
 django-celery-results
 django-celery-beat
 Pillow
+whitenoise
