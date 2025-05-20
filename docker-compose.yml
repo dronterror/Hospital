@@ -14,15 +14,17 @@ services:
       - redis
     environment:
       - DJANGO_SETTINGS_MODULE=hospital_website.settings
-      - POSTGRES_DB=hospital_db
+      - PYTHONPATH=/app/backend
       - POSTGRES_USER=hospital_user
       - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_HOST=db
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     volumes:
-      - ./backend:/app
-    expose:
-      - "8000"
+      - ./backend/static:/app/backend/static
+      - ./staticfiles:/app/staticfiles
+    ports:
+      - "8000:8000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`localhost`)"
@@ -41,18 +43,21 @@ services:
       - backend
     environment:
       - DJANGO_SETTINGS_MODULE=hospital_website.settings
+      - PYTHONPATH=/app/backend
       - POSTGRES_DB=hospital_db
       - POSTGRES_USER=hospital_user
       - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_HOST=db
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     volumes:
-      - ./backend:/app
+      - ./backend/static:/app/backend/static
+      - ./staticfiles:/app/staticfiles
     networks:
       - mynetwork
 
   db:
-    image: postgres:13
+    image: postgres:14
     environment:
       - POSTGRES_DB=hospital_db
       - POSTGRES_USER=hospital_user
@@ -83,6 +88,27 @@ services:
       - "8080:8080" # Traefik dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - mynetwork
+
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: python manage.py migrate
+    environment:
+      - DJANGO_SETTINGS_MODULE=hospital_website.settings
+      - POSTGRES_DB=hospital_db
+      - POSTGRES_USER=hospital_user
+      - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_HOST=db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./backend/static:/app/backend/static
+      - ./staticfiles:/app/staticfiles
+    depends_on:
+      - db
     networks:
       - mynetwork
 
