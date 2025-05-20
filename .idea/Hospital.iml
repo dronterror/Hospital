@@ -16,7 +16,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 (Hospital)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12.3 WSL (Ubuntu-24.04): (/home/dev/.virtualenvs/Hospital/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">

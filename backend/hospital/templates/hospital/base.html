@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static wagtailcore_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page.title }}{% endblock %} - Hospital Website</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/">Hospital Website</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/doctors/">Doctors</a></li>
+                    <li><a href="/hospital/appointment/">Appointments</a></li>
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="/hospital/contact/">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            {% if settings.hospital.FooterText %}
+                {{ settings.hospital.FooterText.body|richtext }}
+            {% else %}
+                <p>© {% now "Y" %} Hospital Website. All rights reserved.</p>
+            {% endif %}
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
