@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero" style="background-image: url('{% static 'images/hero-bg.jpg' %}');">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="display-4 mb-4 animate-fade-in">World-Class Healthcare<br>Close to Home</h1>
+                <p class="lead mb-5 animate-fade-in">Providing exceptional medical care with compassion and innovation</p>
+                <div class="animate-fade-in">
+                    <a href="/appointments" class="btn btn-primary btn-lg me-3">Make an Appointment</a>
+                    <a href="/services" class="btn btn-outline-light btn-lg">Our Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                            <h3 class="h4 mb-3">Find a Doctor</h3>
+                            <p class="mb-4">Search our network of experienced healthcare professionals.</p>
+                            <a href="/doctors" class="btn btn-outline-primary">Search Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-hospital fa-3x text-primary mb-3"></i>
+                            <h3 class="h4 mb-3">Our Locations</h3>
+                            <p class="mb-4">Find the nearest hospital or clinic in your area.</p>
+                            <a href="/locations" class="btn btn-outline-primary">View Locations</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
+                            <h3 class="h4 mb-3">Patient Portal</h3>
+                            <p class="mb-4">Access your health records and manage appointments.</p>
+                            <a href="/patient-portal" class="btn btn-outline-primary">Login Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Services -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Medical Services</h2>
+            <div class="row g-4">
+                {% for service in page.featured_services.all %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        {% if service.image %}
+                        {% image service.image fill-400x300 class="card-img-top" %}
+                        {% endif %}
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">{{ service.title }}</h3>
+                            <p class="mb-3">{{ service.description|truncatewords:30 }}</p>
+                            <a href="{{ service.url }}" class="btn btn-link text-primary p-0">Learn More →</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="{% static 'images/why-choose-us.jpg' %}" alt="Why Choose Us" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Why Choose Our Hospital</h2>
+                    <div class="d-flex mb-4">
+                        <div class="me-4">
+                            <i class="fas fa-check-circle text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5">Expert Medical Team</h4>
+                            <p>Our team of experienced doctors and specialists are leaders in their fields.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="me-4">
+                            <i class="fas fa-hospital-user text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5">Patient-Centered Care</h4>
+                            <p>We prioritize your comfort and well-being throughout your healthcare journey.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="me-4">
+                            <i class="fas fa-microscope text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5">Advanced Technology</h4>
+                            <p>State-of-the-art facilities and equipment for accurate diagnosis and treatment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest News & Updates -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Latest News & Updates</h2>
+            <div class="row g-4">
+                {% for news in page.latest_news.all %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        {% if news.image %}
+                        {% image news.image fill-400x250 class="card-img-top" %}
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="text-muted small mb-2">{{ news.date|date:"F j, Y" }}</p>
+                            <h3 class="h5 mb-3">{{ news.title }}</h3>
+                            <p class="mb-3">{{ news.excerpt|truncatewords:20 }}</p>
+                            <a href="{{ news.url }}" class="btn btn-link text-primary p-0">Read More →</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container text-center">
+            <h2 class="mb-4">Ready to Schedule Your Visit?</h2>
+            <p class="lead mb-4">Our team of healthcare professionals is here to help you.</p>
+            <a href="/appointments" class="btn btn-light btn-lg">Make an Appointment</a>
+        </div>
+    </section>
+{% endblock %} 

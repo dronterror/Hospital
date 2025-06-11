@@ -1,30 +1,130 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-    <h1>{{ page.title }}</h1>
-    
-    {% if page.intro %}
-        <div class="intro">{{ page.intro|richtext }}</div>
+<div class="hero-section position-relative">
+    {% if page.banner_image %}
+        {% image page.banner_image fill-2000x600 as banner %}
+        <div class="hero-image" style="background-image: url('{{ banner.url }}');">
+            <div class="container">
+                <div class="hero-content text-white">
+                    <h1>Welcome to Our Hospital</h1>
+                    {{ page.intro|richtext }}
+                </div>
+            </div>
+        </div>
     {% endif %}
-    
-    <div class="feature-blocks">
-        <div class="feature">
-            <h2>Book an Appointment</h2>
-            <p>Schedule your visit with one of our specialists.</p>
-            <a href="{% url 'appointment' %}" class="button">Book Now</a>
-        </div>
-        
-        <div class="feature">
-            <h2>Meet Our Doctors</h2>
-            <p>Learn about our experienced medical professionals.</p>
-            <a href="{% pageurl page.get_children.type(DoctorIndexPage).first %}" class="button">View Doctors</a>
-        </div>
-        
-        <div class="feature">
-            <h2>Health Blog</h2>
-            <p>Read the latest articles about health and wellness.</p>
-            <a href="{% pageurl page.get_children.type(BlogIndexPage).first %}" class="button">Read Blog</a>
+</div>
+
+<div class="hospital-locations py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Hospitals</h2>
+        <div class="row">
+            {% for location in locations %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if location.image %}
+                        {% image location.image fill-400x300 as img %}
+                        <img src="{{ img.url }}" alt="{{ location.title }}" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ location.title }}</h5>
+                        <p class="card-text">{{ location.address }}</p>
+                        <a href="{% pageurl location %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
+</div>
+
+<div class="quick-access py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="quick-link-card text-center">
+                    <i class="fas fa-calendar-alt fa-3x mb-3 text-primary"></i>
+                    <h4>Appointments</h4>
+                    <p>Book or manage your appointments</p>
+                    <a href="/appointments/" class="btn btn-outline-primary">Book Now</a>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="quick-link-card text-center">
+                    <i class="fas fa-phone fa-3x mb-3 text-primary"></i>
+                    <h4>Contact Us</h4>
+                    <p>Get in touch with our team</p>
+                    <a href="/contact/" class="btn btn-outline-primary">Contact</a>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="quick-link-card text-center">
+                    <i class="fas fa-search fa-3x mb-3 text-primary"></i>
+                    <h4>Find a Consultant</h4>
+                    <p>Search for specialists</p>
+                    <a href="/doctors/" class="btn btn-outline-primary">Search</a>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="quick-link-card text-center">
+                    <i class="fas fa-user-md fa-3x mb-3 text-primary"></i>
+                    <h4>Work with Us</h4>
+                    <p>Join our healthcare team</p>
+                    <a href="/careers/" class="btn btn-outline-primary">View Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="featured-services py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Services</h2>
+        <div class="row">
+            {% for service in services %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="service-icon text-center mb-3">
+                            <i class="{{ service.icon }} fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title text-center">{{ service.title }}</h5>
+                        {{ service.description|richtext }}
+                        <div class="text-center mt-3">
+                            <a href="{% pageurl service %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="latest-news py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Latest News</h2>
+        <div class="row">
+            {% for news in news_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if news.image %}
+                        {% image news.image fill-400x300 as img %}
+                        <img src="{{ img.url }}" alt="{{ news.title }}" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text">{{ news.intro }}</p>
+                        <a href="{% pageurl news %}" class="btn btn-link">Read More</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        {{ news.date }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

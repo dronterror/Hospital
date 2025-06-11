@@ -1,0 +1,20 @@
+Appointment Reminder
+
+Dear {{ patient_name }},
+
+This is a friendly reminder about your upcoming appointment:
+
+Doctor: {{ doctor_name }}
+Date: {{ appointment_date }}
+Time: {{ appointment_time }}
+
+Please arrive 15 minutes before your scheduled appointment time. If you need to reschedule or cancel, please do so at least 24 hours in advance.
+
+What to bring:
+- Photo ID
+- Insurance card (if applicable)
+- List of current medications
+- Any relevant medical records or test results
+
+This is an automated message. Please do not reply to this email.
+If you have any questions, please contact our office directly. 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
     <article class="blog-post">
@@ -12,7 +12,13 @@
             </div>
         {% endif %}
         
-        {{ page.body|richtext }}
+        {% if page.image %}
+            {% image page.image width-800 class="img-fluid" %}
+        {% endif %}
+        
+        <div class="blog-content">
+            {% include_block page.body %}
+        </div>
         
         <p><a href="{{ page.get_parent.url }}">← Back to blog</a></p>
     </article>

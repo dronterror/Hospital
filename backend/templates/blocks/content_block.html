@@ -1,0 +1,17 @@
+<div class="content-block">
+    {% if value.title %}
+        <h3>{{ value.title }}</h3>
+    {% endif %}
+    
+    {% if value.content %}
+        <div class="rich-text">
+            {{ value.content }}
+        </div>
+    {% endif %}
+    
+    {% if value.html %}
+        <div class="raw-html">
+            {{ value.html|safe }}
+        </div>
+    {% endif %}
+</div> 

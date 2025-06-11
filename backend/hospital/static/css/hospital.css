@@ -1,0 +1,336 @@
+/* Global Styles */
+:root {
+    --primary-color: #005EB8;  /* NHS Blue */
+    --secondary-color: #41B6E6;
+    --accent-color: #FFB81C;
+    --success-color: #009639;
+    --danger-color: #DA291C;
+    --dark-blue: #003087;
+    --light-blue: #E6EFF8;
+    --text-color: #3E3E3E;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.site-header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand img {
+    max-height: 60px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--dark-blue);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: var(--primary-color);
+}
+
+/* Emergency Banner */
+.emergency-banner {
+    background-color: var(--danger-color);
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+}
+
+.hero-image {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+}
+
+.hero-content {
+    position: relative;
+    padding: 6rem 0;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+/* Quick Access Section */
+.quick-link-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.quick-link-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Hospital Locations */
+.hospital-locations .card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hospital-locations .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Featured Services */
+.featured-services .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.featured-services .card:hover {
+    transform: translateY(-5px);
+}
+
+.service-icon {
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    background: var(--light-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Latest News */
+.latest-news .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.latest-news .card-footer {
+    background: none;
+    border-top: 1px solid #eee;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-blue);
+}
+
+footer h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+footer .list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--secondary-color);
+}
+
+.social-links a {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-blue);
+    border-color: var(--dark-blue);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0,94,184,0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .navbar-brand img {
+        max-height: 40px;
+    }
+    
+    .quick-link-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+}
+
+/* Hero section */
+.hero {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.hero-image {
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Doctor cards */
+.doctor-card {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.doctor-card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.doctor-card .specialization {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+/* News cards */
+.news-card {
+    height: 100%;
+}
+
+.news-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-image {
+        height: 400px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .doctor-card img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+} 

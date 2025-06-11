@@ -1,23 +1,44 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-    <h1>{{ page.title }}</h1>
-    
-    {% if page.intro %}
-        <div class="intro">{{ page.intro|richtext }}</div>
-    {% endif %}
-    
-    {% for doctor in doctors %}
-        <div class="doctor-card">
-            <h3>{{ doctor.name }}</h3>
-            <p>Specialization: {{ doctor.specialization }}</p>
-            {% if doctor.photo %}
-                <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}" class="doctor-photo">
-            {% endif %}
-            {% if doctor.bio %}
-                <p>{{ doctor.bio }}</p>
-            {% endif %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ page.title }}</h1>
+            {{ page.intro|richtext }}
         </div>
-    {% endfor %}
+    </div>
+
+    <div class="row mt-4">
+        {% for doctor in doctors %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if doctor.photo %}
+                    {% image doctor.photo fill-300x300 as photo %}
+                    <img src="{{ photo.url }}" alt="{{ doctor.title }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">Dr. {{ doctor.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialization }}</h6>
+                    <p class="card-text">{{ doctor.bio|richtext|truncatewords:30 }}</p>
+                    <div class="mt-3">
+                        <strong>Qualification:</strong> {{ doctor.qualification }}<br>
+                        <strong>Experience:</strong> {{ doctor.experience_years }} years<br>
+                        <strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% pageurl doctor %}" class="btn btn-primary">View Profile</a>
+                    <a href="{% url 'appointment_form' %}?doctor={{ doctor.id }}" class="btn btn-success">Book Appointment</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No doctors found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

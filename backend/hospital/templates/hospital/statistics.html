@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Appointment Statistics</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Total Appointments (Last 30 Days)</h5>
+            <h2 class="display-4">{{ stats.total_appointments }}</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Appointments by Doctor</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Doctor</th>
+                                    <th>Appointments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doctor, count in stats.appointments_by_doctor.items %}
+                                <tr>
+                                    <td>{{ doctor }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Daily Appointments</h5>
+                    <canvas id="appointmentsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('appointmentsChart').getContext('2d');
+    const dates = Object.keys({{ stats.appointments_by_date|safe }});
+    const counts = Object.values({{ stats.appointments_by_date|safe }});
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Daily Appointments',
+                data: counts,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

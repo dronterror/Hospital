@@ -1,13 +1,16 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import (
+    PatientViewSet, DoctorViewSet,
+    AppointmentViewSet, MedicalRecordViewSet
+)
+
+router = DefaultRouter()
+router.register(r'patients', PatientViewSet)
+router.register(r'doctors', DoctorViewSet)
+router.register(r'appointments', AppointmentViewSet)
+router.register(r'medical-records', MedicalRecordViewSet)
 
 urlpatterns = [
-    # Legacy URLs
-    path('old/', views.home, name='old-home'),
-    path('appointment/', views.appointment_form, name='appointment'),
-    path('appointment/success/', views.appointment_success, name='appointment-success'),
-    path('doctors/', views.doctor_list, name='doctors'),
-    path('calendar/', views.calendar_view, name='calendar'),
-    path('calendar/data/', views.calendar_data, name='calendar-data'),
-    path('contact/', views.contact, name='contact'),
+    path('', include(router.urls)),
 ]

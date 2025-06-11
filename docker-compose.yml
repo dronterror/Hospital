@@ -1,116 +1,99 @@
-version: "3.8"
-
-networks:
-  mynetwork:
-    driver: bridge
+version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
     depends_on:
       - db
       - redis
     environment:
-      - DJANGO_SETTINGS_MODULE=hospital_website.settings
-      - PYTHONPATH=/app/backend
-      - POSTGRES_USER=hospital_user
-      - POSTGRES_PASSWORD=secretpassword
-      - POSTGRES_HOST=db
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hospital
+      - REDIS_URL=redis://redis:6379/0
+      - DEBUG=0
+      - SECRET_KEY=your-secret-key-here
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - CORS_ALLOWED_ORIGINS=http://localhost,http://127.0.0.1
     volumes:
-      - ./backend/static:/app/backend/static
-      - ./staticfiles:/app/staticfiles
-    ports:
-      - "8000:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`)"
-      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+      - ./backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     networks:
-      - mynetwork
+      - app-network
 
-  celery_worker:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=hospital
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  celery:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    command: celery -A hospital_website worker -l info
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A core worker -l info
     depends_on:
       - db
       - redis
       - backend
     environment:
-      - DJANGO_SETTINGS_MODULE=hospital_website.settings
-      - PYTHONPATH=/app/backend
-      - POSTGRES_DB=hospital_db
-      - POSTGRES_USER=hospital_user
-      - POSTGRES_PASSWORD=secretpassword
-      - POSTGRES_HOST=db
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hospital
+      - REDIS_URL=redis://redis:6379/0
     volumes:
-      - ./backend/static:/app/backend/static
-      - ./staticfiles:/app/staticfiles
+      - ./backend:/app
     networks:
-      - mynetwork
+      - app-network
 
-  db:
-    image: postgres:14
-    environment:
-      - POSTGRES_DB=hospital_db
-      - POSTGRES_USER=hospital_user
-      - POSTGRES_PASSWORD=secretpassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5432:5432"
-    networks:
-      - mynetwork
-
-  redis:
-    image: redis:6-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - mynetwork
-
-  traefik:
-    image: traefik:v2.9
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8080:8080" # Traefik dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - mynetwork
-
-  migrate:
+  celery-beat:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    command: python manage.py migrate
-    environment:
-      - DJANGO_SETTINGS_MODULE=hospital_website.settings
-      - POSTGRES_DB=hospital_db
-      - POSTGRES_USER=hospital_user
-      - POSTGRES_PASSWORD=secretpassword
-      - POSTGRES_HOST=db
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    volumes:
-      - ./backend/static:/app/backend/static
-      - ./staticfiles:/app/staticfiles
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A core beat -l info
     depends_on:
       - db
+      - redis
+      - backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hospital
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
     networks:
-      - mynetwork
+      - app-network
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  app-network:
+    driver: bridge
